@@ -1,12 +1,7 @@
-Flask
+flask
 requests
 googlemaps
 ortools
 openpyxl
 reportlab
 python-dotenv
-
-
-
-
-
