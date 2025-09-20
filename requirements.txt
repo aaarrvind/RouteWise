@@ -4,8 +4,8 @@ googlemaps
 ortools
 openpyxl
 reportlab
-dotenv
-os
+python-dotenv
+
 
 
 
