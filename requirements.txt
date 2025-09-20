@@ -1,0 +1,12 @@
+Flask
+requests
+googlemaps
+ortools
+openpyxl
+reportlab
+dotenv
+os
+
+
+
+
