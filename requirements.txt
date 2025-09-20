@@ -5,7 +5,6 @@ ortools
 openpyxl
 reportlab
 python-dotenv
-os
 
 
 
