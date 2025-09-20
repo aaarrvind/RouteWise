@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delivery Route Optimizer - Futuristic 3D Dashboard</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnL3SwYRLlFwQNpYNdvPYAuc-wU8u_GaA"></script>
+
+<!-- Particles.js for animated background -->
+<script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+
+<style>
+/* Basic Reset */
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+    font-family: 'Roboto', sans-serif;
+    background: #0f0f20;
+    color: #fff;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Particle Background */
+#particles-js {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    top:0; left:0;
+}
+
+/* Header */
+header {
+    text-align: center;
+    padding: 50px 20px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(0,255,224,0.2);
+}
+header h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3rem;
+    color: #00ffe0;
+    text-shadow: 0 0 10px #00ffe0, 0 0 20px #00ffe0, 0 0 30px #0077ff;
+}
+header p {
+    font-size: 1.2rem;
+    color: #a0a0ff;
+}
+
+/* Form Container with 3D effect */
+.form-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    display: flex;
+    justify-content: center;
+    perspective: 1500px;
+}
+form {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(20px);
+    padding: 35px;
+    border-radius: 25px;
+    width: 400px;
+    box-shadow: 0 0 40px rgba(0,255,224,0.5);
+    transition: transform 0.6s ease, box-shadow 0.6s ease;
+}
+form:hover {
+    transform: rotateY(5deg) rotateX(5deg) scale(1.02);
+    box-shadow: 0 0 60px #00ffe0, 0 0 80px #0077ff;
+}
+input[type="text"] {
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 12px;
+    border: none;
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+input[type="text"]:focus {
+    background: rgba(0,255,224,0.1);
+    box-shadow: 0 0 15px #00ffe0;
+}
+button {
+    padding: 15px 25px;
+    margin-top: 15px;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(90deg, #00ffe0, #0077ff);
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+button:hover {
+    transform: scale(1.08) rotateZ(-1deg);
+    box-shadow: 0 0 25px #00ffe0, 0 0 40px #0077ff;
+}
+
+/* Main Container for Map & Results */
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+    perspective: 1500px;
+}
+#map {
+    flex: 2 1 600px;
+    height: 500px;
+    border-radius: 25px;
+    box-shadow: 0 0 50px rgba(0,255,224,0.5);
+    transition: transform 0.6s ease;
+}
+#map:hover {
+    transform: rotateY(3deg) rotateX(2deg);
+}
+#results {
+    flex: 1 1 350px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(20px);
+    padding: 25px;
+    border-radius: 25px;
+    box-shadow: 0 0 40px rgba(0,255,224,0.5);
+    max-height: 500px;
+    overflow-y: auto;
+    transition: transform 0.5s ease;
+}
+#results:hover { transform: rotateY(-3deg) rotateX(2deg); }
+#results h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.6rem;
+    color: #00ffe0;
+    margin-bottom: 15px;
+}
+.stop {
+    margin: 10px 0;
+    padding: 10px;
+    border-left: 4px solid #00ffe0;
+    background: rgba(255,255,255,0.05);
+    transition: all 0.3s ease;
+}
+.stop:hover {
+    transform: translateX(5px) scale(1.02);
+    box-shadow: 0 0 15px #00ffe0;
+}
+
+/* Download Buttons */
+.download-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+.download-buttons button {
+    flex: 1 1 45%;
+    background: linear-gradient(90deg, #ff00ff, #ff6600);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .container { flex-direction: column; align-items: center; }
+    #map, #results { flex: 1 1 100%; }
+}
+</style>
+</head>
+<body>
+
+<!-- Particle Background -->
+<div id="particles-js"></div>
+
+<header>
+    <h1>Delivery Route Optimizer</h1>
+    <p>Futuristic 3D dashboard for delivery route planning</p>
+</header>
+
+<!-- Form -->
+<div class="form-container">
+    <form id="addressForm">
+        <label><b>Start Location:</b></label>
+        <input type="text" name="start_address" placeholder="Enter starting location">
+        <label><b>Delivery Locations:</b></label>
+        <div id="addressFields">
+            <input type="text" name="addresses[]" placeholder="Enter delivery address">
+        </div>
+        <button type="button" onclick="addField()">Add More</button>
+        <button type="submit">Optimize Route</button>
+    </form>
+</div>
+
+<!-- Map & Results -->
+<div class="container">
+    <div id="map"></div>
+    <div id="results">
+        <h2>Route Details</h2>
+        <div id="stops"></div>
+        <p><b>Total Distance:</b> <span id="distance"></span></p>
+        <p><b>Total Time:</b> <span id="time"></span></p>
+        <div class="download-buttons">
+            <button id="downloadPdf">Download PDF</button>
+            <button id="downloadExcel">Download Excel</button>
+        </div>
+    </div>
+</div>
+
+<script>
+/* Initialize Particles.js */
+particlesJS("particles-js", {
+    "particles": {
+        "number": { "value": 80, "density": {"enable": true,"value_area":800}},
+        "color": { "value": ["#00ffe0","#0077ff","#ff00ff","#ff6600"] },
+        "shape": { "type": "circle" },
+        "opacity": { "value": 0.7 },
+        "size": { "value": 3 },
+        "line_linked": { "enable": true, "distance": 150, "color": "#00ffe0", "opacity":0.4, "width":1 },
+        "move": { "enable": true, "speed": 2 }
+    }
+});
+
+/* Map + Route JS */
+let map, directionsService, directionsRenderer, lastResult=null;
+function initMap() {
+    map = new google.maps.Map(document.getElementById("map"), { center:{ lat:25.276987,lng:55.296249 }, zoom:11 });
+    directionsService = new google.maps.DirectionsService();
+    directionsRenderer = new google.maps.DirectionsRenderer({ map: map });
+}
+
+function addField() { $("#addressFields").append('<br><input type="text" name="addresses[]" placeholder="Enter delivery address">'); }
+
+$("#addressForm").on("submit", function(e){
+    e.preventDefault();
+    $.post("/optimize", $(this).serialize(), function(data){
+        if(data.optimized_order){
+            lastResult=data;
+            showRoute(data.optimized_order);
+            $("#stops").empty();
+            data.optimized_order.forEach((stop,i)=>{
+                $("#stops").append(`<div class="stop"><b>Stop ${i+1}:</b> ${stop}</div>`);
+            });
+            $("#distance").text(data.total_distance_km + " km");
+            $("#time").text(data.total_time_min + " minutes");
+        } else { alert("Could not optimize route!"); }
+    });
+});
+
+function showRoute(addresses){
+    if(addresses.length<2) return alert("Need at least 2 locations.");
+    let waypoints = addresses.slice(1,-1).map(addr=>({location:addr,stopover:true}));
+    directionsService.route({ origin:addresses[0], destination:addresses[addresses.length-1], waypoints:waypoints, travelMode: google.maps.TravelMode.DRIVING }, 
+    (response,status)=>{ if(status==="OK") directionsRenderer.setDirections(response); else alert("Directions request failed: "+status); });
+}
+
+/* Download Buttons */
+$("#downloadPdf").on("click", function(){
+    if(!lastResult) return alert("No route to export!");
+    fetch("/download/pdf",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(lastResult)})
+    .then(res=>res.blob()).then(blob=>{ let url=window.URL.createObjectURL(blob); let a=document.createElement("a"); a.href=url; a.download="route_plan.pdf"; document.body.appendChild(a); a.click(); a.remove(); });
+});
+$("#downloadExcel").on("click", function(){
+    if(!lastResult) return alert("No route to export!");
+    fetch("/download/excel",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(lastResult)})
+    .then(res=>res.blob()).then(blob=>{ let url=window.URL.createObjectURL(blob); let a=document.createElement("a"); a.href=url; a.download="route_plan.xlsx"; document.body.appendChild(a); a.click(); a.remove(); });
+});
+
+window.onload=initMap;
+</script>
+</body>
+</html>
