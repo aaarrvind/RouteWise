@@ -4,9 +4,12 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import openpyxl
 import io
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 app = Flask(__name__)
-GOOGLE_MAPS_API_KEY = "AIzaSyDnL3SwYRLlFwQNpYNdvPYAuc-wU8u_GaA"
+GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
 
 
 def get_geocoded_addresses(addresses):
@@ -72,7 +75,7 @@ def solve_tsp(matrix):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', GOOGLE_MAPS_API_KEY=GOOGLE_MAPS_API_KEY)
 
 
 @app.route('/optimize', methods=['POST'])
